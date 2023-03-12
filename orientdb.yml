@@ -1,0 +1,42 @@
+namespace: orientdb
+db:
+  metadata:
+    defines: metadata
+    name: OrientDB Community Edition
+    description: OrientDB is an open source NoSQL database management system written in Java. It is a Multi-model database, supporting graph, document, key/value, and object models, but the relationships are managed as in graph databases with direct connections between records.
+    website: https://orientdb.org/
+    publisher: monk.io
+    icon: https://orientdb.org/themes/custom/orientdb/images/logo.png
+  defines: runnable
+  variables:
+    db_password:
+      env: ORIENTDB_ROOT_PASSWORD
+      type: string
+      value: password
+    db_port:
+      type: int
+      value: 2424
+    db_studio_port:
+      type: int
+      value: 2480
+    image:
+      type: string
+      value: 3.2.17-tp3
+    volume_local:
+      type: string
+      value: <- `${monk-volume-path}/orientdb`
+  containers:
+    db:
+      image: orientdb
+      image-tag: <- `${image}`
+      ports:
+        - <- `${db_port}:2424`
+        - <- `${db_studio_port}:2480`
+      paths:
+        - <- `${volume_local}/data:/orientdb/databases`
+  services:
+    db:
+      port: 2424
+      container: db
+      protocol: tcp
+      host-port: <- `${db_port}`
