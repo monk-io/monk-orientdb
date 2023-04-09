@@ -55,7 +55,6 @@ user: root
 | db_port        | OrientDB database port     | 5432                         |
 | db_studio_port | OrientDB studio port       | 5432                         |
 | image          | Docker image tag           | pg14-latest                  |
-| volume_local   | Volume path                | ${monk-volume-path}/orientdb |
 | db_password    | OrientDB database password | password                     |
 
 ## Stop, remove and clean up workloads and templates
