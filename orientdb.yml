@@ -12,7 +12,7 @@ base:
       OrientDB is a NoSQL database, which means that it does not require a fixed schema to be defined before data can be stored. Instead, data can be added and modified dynamically as needed. OrientDB is also designed to be highly scalable, with built-in support for sharding and distributed clustering.
 
       OrientDB provides a SQL-like query language called OrientSQL, as well as a powerful API for accessing and manipulating data. It also includes a number of built-in features, such as a graph editor and a document editor, which make it easier to work with and visualize complex data structures.
-      
+
       Overall, OrientDB is a powerful and flexible database management system that is well-suited for applications that require support for multiple data models and flexible schema. It is used in a wide range of applications, including social networks, e-commerce platforms, and financial services.
     website: https://orientdb.org/
     publisher: monk.io
@@ -40,11 +40,6 @@ db:
     image:
       type: string
       value: 3.2.17-tp3
-  containers:
-    db:
-      ports:
-        - <- `0.0.0.0:${db_port}:2424`
-        - <- `0.0.0.0:${db_studio_port}:2480`
   services:
     db:
       port: 2424
