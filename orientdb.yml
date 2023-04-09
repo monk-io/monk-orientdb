@@ -1,6 +1,7 @@
 ---
 namespace: orientdb
-db:
+
+base:
   metadata:
     defines: metadata
     name: OrientDB Community Edition
@@ -17,7 +18,16 @@ db:
     website: https://orientdb.org/
     publisher: monk.io
     icon: https://orientdb.org/themes/custom/orientdb/images/logo.png
+  containers:
+    db:
+      image: orientdb
+      image-tag: <- `${image}`
+      paths:
+        - <- `${monk-volume-path}/orientdb:/orientdb/databases`
+    
+db:
   defines: runnable
+  inherits: orientdb/base
   variables:
     db_password:
       env: ORIENTDB_ROOT_PASSWORD
@@ -34,13 +44,9 @@ db:
       value: 3.2.17-tp3
   containers:
     db:
-      image: orientdb
-      image-tag: <- `${image}`
       ports:
          - <- `0.0.0.0:${db_port}:2424`
          - <- `0.0.0.0:${db_studio_port}:2480`
-      paths:
-        - <- `${monk-volume-path}/orientdb:/orientdb/databases`
   services:
     db:
       port: 2424
