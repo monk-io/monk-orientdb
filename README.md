@@ -58,7 +58,6 @@ user: root
 | volume_local   | Volume path                | ${monk-volume-path}/orientdb |
 | db_password    | OrientDB database password | password                     |
 
-
 ## Stop, remove and clean up workloads and templates
 
 ```bash

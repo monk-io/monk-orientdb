@@ -1,9 +1,19 @@
+---
 namespace: orientdb
 db:
   metadata:
     defines: metadata
     name: OrientDB Community Edition
-    description: OrientDB is an open source NoSQL database management system written in Java. It is a Multi-model database, supporting graph, document, key/value, and object models, but the relationships are managed as in graph databases with direct connections between records.
+    description: |
+      OrientDB is a multi-model database management system that supports graph, document, key-value, and object-oriented models. It is designed to be a flexible and scalable database solution that can handle a wide range of data types and structures.
+
+      In the graph model, OrientDB is similar to Neo4j, in that it represents data as nodes and edges. However, OrientDB also supports other data models, such as document-oriented and key-value stores, which allow for greater flexibility in data representation.
+
+      OrientDB is a NoSQL database, which means that it does not require a fixed schema to be defined before data can be stored. Instead, data can be added and modified dynamically as needed. OrientDB is also designed to be highly scalable, with built-in support for sharding and distributed clustering.
+      
+      OrientDB provides a SQL-like query language called OrientSQL, as well as a powerful API for accessing and manipulating data. It also includes a number of built-in features, such as a graph editor and a document editor, which make it easier to work with and visualize complex data structures.
+
+      Overall, OrientDB is a powerful and flexible database management system that is well-suited for applications that require support for multiple data models and flexible schema. It is used in a wide range of applications, including social networks, e-commerce platforms, and financial services.
     website: https://orientdb.org/
     publisher: monk.io
     icon: https://orientdb.org/themes/custom/orientdb/images/logo.png
@@ -22,21 +32,20 @@ db:
     image:
       type: string
       value: 3.2.17-tp3
-    volume_local:
-      type: string
-      value: <- `${monk-volume-path}/orientdb`
   containers:
     db:
       image: orientdb
       image-tag: <- `${image}`
-      ports:
-        - <- `${db_port}:2424`
-        - <- `${db_studio_port}:2480`
       paths:
-        - <- `${volume_local}/data:/orientdb/databases`
+        - <- `${monk-volume-path}/orientdb:/orientdb/databases`
   services:
     db:
       port: 2424
       container: db
       protocol: tcp
       host-port: <- `${db_port}`
+    db_studio:
+      port: 2480
+      container: db
+      protocol: tcp
+      host-port: <- `${db_studio_port}`
