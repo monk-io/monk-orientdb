@@ -45,7 +45,6 @@ db:
       port: 2424
       container: db
       protocol: tcp
-      host-port: <- `${db_port}`
     db_studio:
       port: 2480
       container: db
