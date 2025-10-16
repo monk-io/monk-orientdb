@@ -1,0 +1,151 @@
+---
+title: OrientDB
+description: Ready-to-run OrientDB container template you can run directly or inherit to integrate a multi-model NoSQL database into your stack.
+primary_category: database
+tags: [orientdb, nosql, database, template, runnable, multi-model, graph, document]
+integration_type: template
+hosting_models: [self-hosted]
+website_url: https://orientdb.org/
+docs_url: https://orientdb.org/docs/
+publisher: monk.io
+---
+
+## Overview
+
+This template provides a production‑ready OrientDB instance as a Monk runnable. You can:
+
+- Run it directly to get a managed OrientDB container with sensible defaults
+- Inherit it in your own runnable to seamlessly add a multi-model database to your stack
+
+OrientDB is a multi-model NoSQL database that combines the power of graphs with documents, key-values, and objects. It supports ACID transactions, SQL queries, and provides high performance for both transactional and analytical workloads.
+
+## What this template manages
+
+- OrientDB server
+- Network service on ports 2424 (binary), 2480 (HTTP)
+- Persistent volumes for data storage
+- Multi-model support (graph, document, key-value, object)
+- SQL-like query language
+
+## Quick start (run directly)
+
+1) Load templates
+
+```bash
+monk load MANIFEST
+```
+
+2) Run OrientDB with defaults
+
+```bash
+monk run orientdb/db
+```
+
+3) Customize credentials (recommended via inheritance)
+
+Running directly uses the defaults defined in this template's `variables`. Secrets added with `monk secrets add` will not affect this runnable unless you inherit it and reference those secrets.
+
+- Preferred: inherit and replace variables with `secret("...")` as shown below.
+- Alternative: fork/clone and edit the `variables` in `orientdb.yml`, then `monk load MANIFEST` and run.
+
+Once started, access OrientDB Studio at `http://localhost:2480` or connect via binary protocol on port 2424.
+
+Default credentials: `root` / `password` (change for production!)
+
+## Configuration
+
+Key variables you can customize in this template:
+
+```yaml
+variables:
+  image: "3.2.17-tp3"            # container image tag
+  db_password: "..."             # root password (env: ORIENTDB_ROOT_PASSWORD)
+  db_studio_port: "2480"         # HTTP/Studio port
+  db_port: "2424"                # binary protocol port
+```
+
+Data is persisted under `${monk-volume-path}/orientdb` on the host.
+
+## Use by inheritance (recommended for apps)
+
+Inherit the OrientDB runnable in your application and declare a connection. Example:
+
+```yaml
+namespace: myapp
+graphdb:
+  defines: runnable
+  inherits: orientdb/db
+api:
+  defines: runnable
+  containers:
+    api:
+      image: myorg/api
+  connections:
+    database:
+      runnable: graphdb
+      service: db
+  variables:
+    database-host:
+      value: <- connection-hostname("database")
+    database-port:
+      value: "2424"
+    database-password:
+      value: <- secret("orientdb-root-password")
+```
+
+Then set the secrets once and run your app group:
+
+```bash
+monk secrets add -g orientdb-root-password="STRONG_PASSWORD"
+monk run myapp/api
+```
+
+## Ports and connectivity
+
+- Service: `db` on TCP port `2424` (binary protocol)
+- Service: `db_studio` on TCP port `2480` (HTTP/Studio)
+- From other runnables in the same process group, use `connection-hostname("<connection-name>")` to resolve the DB host.
+
+## Persistence and configuration
+
+- Data path: `${monk-volume-path}/orientdb:/orientdb/databases`
+- OrientDB stores all databases, graphs, and documents in this directory
+
+## Features
+
+- Multi-model database (graph, document, key-value, object)
+- SQL support with graph extensions
+- ACID transactions
+- Distributed architecture
+- Schema-less and schema-full modes
+- High performance for both reads and writes
+- Built-in full-text search
+
+## Use cases
+
+OrientDB excels at:
+- Social networks and recommendation engines
+- Knowledge graphs
+- Fraud detection
+- Master data management
+- Content management
+- Network and IT operations
+
+## Related templates
+
+- Combine with application servers for multi-model data needs
+- Use with `prometheus-grafana/` for performance monitoring
+- Integrate with ETL tools for data warehousing
+
+## Troubleshooting
+
+- If you changed `db_password` but the container has existing data, authentication may fail. Either reset the data volume or update the password inside OrientDB to match.
+- Access OrientDB Studio web interface at `http://localhost:2480`
+- Ensure the host volumes are writable by the container user
+- Check logs:
+
+```bash
+monk logs -l 500 -f orientdb/db
+```
+
+- For production, always change the default root password
