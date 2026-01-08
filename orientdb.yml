@@ -39,7 +39,7 @@ db:
       value: 2480
     image:
       type: string
-      value: 3.2.17-tp3
+      value: latest
   services:
     db:
       port: 2424
